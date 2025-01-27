@@ -8,10 +8,43 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// prisma/schema.prisma
+
 model Project {
   id          Int      @id @default(autoincrement())
   name        String
-  description String?  // This is the new description field
+  description String?
   createdAt   DateTime @default(now())
+  products Product[]
+}
+
+model Product {
+    id Int @id @default(autoincrement())
+    name String
+    description String?
+    projectId Int
+    project Project @relation(fields: [projectId], references: [id])
+    features Feature[]
+}
+model Feature{
+    id Int @id @default(autoincrement())
+    name String
+    productId Int
+    product Product @relation(fields: [productId], references: [id])
+    options Option[]
+}
+model Option{
+    id Int @id @default(autoincrement())
+    name String
+    featureId Int
+    feature Feature @relation(fields: [featureId], references: [id])
+    images Image[]
+}
+
+model Image {
+    id Int @id @default(autoincrement())
+    url String
+    optionId Int
+    option Option @relation(fields: [optionId], references: [id])
 }
 

@@ -1,3 +1,4 @@
+//src\app\api\projects\[id]\route.ts
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma"; // Assuming you're using Prisma for database access
 

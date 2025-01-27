@@ -1,3 +1,4 @@
+//src\app\projects\[id].tsx
 "use client";
 import { useRouter } from "next/router"; // Import useRouter hook
 import { useEffect, useState } from "react";
