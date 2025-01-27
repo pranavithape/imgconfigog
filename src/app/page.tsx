@@ -112,6 +112,7 @@ const Home = () => {
             <Link href={`/projects/${project.id}`}>
               <span className="font-bold">{project.name}</span>
             </Link>
+
             <p className="text-sm mt-2">{project.description}</p>
 
             <button

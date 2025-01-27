@@ -1,28 +1,50 @@
-"use client"
+"use client";
+
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useParams } from "next/navigation"; // Use useParams for dynamic routing
 
 const ProjectDetailsPage = () => {
-  const router = useRouter();
-  const { id } = router.query; // Get the project ID from the URL
+  const params = useParams(); // Get dynamic route params
+  const { id } = params; // Extract 'id' from params
+
   const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProject = async () => {
-      if (!id) return; // Don't fetch if ID is not available
-      const response = await fetch(`/api/projects/${id}`);
-      const data = await response.json();
-      setProject(data);
+    if (!id) return; // Ensure 'id' is available before fetching
+
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await fetch(`/api/projects/${id}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          setProject(data);
+        } else {
+          console.error(
+            "Error fetching project:",
+            data.error || "Unknown error"
+          );
+          setProject(null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch project details:", error);
+        setProject(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchProject();
+    fetchProjectDetails();
   }, [id]);
 
-  if (!project) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>; // Show a loading state
+
+  if (!project) return <div>Project not found</div>; // Handle if project not found
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold">{project.name}</h1>
+      <h1 className="text-3xl font-bold">{project.name}</h1>
       <p className="mt-4">{project.description}</p>
     </div>
   );
