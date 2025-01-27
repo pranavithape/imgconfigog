@@ -6,7 +6,7 @@ export async function DELETE(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = await params; // Ensure params is awaited before accessing its properties
 
   try {
     const project = await prisma.project.delete({
@@ -26,7 +26,7 @@ export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const { id } = params; // Get project ID from URL params
+  const { id } = await params; // Await params to access its properties properly
 
   try {
     // Fetch the project using Prisma

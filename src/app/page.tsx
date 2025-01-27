@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import Link from "next/link"; // Import Link component from Next.js
+import Link from "next/link";
 
 const Home = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [projectName, setProjectName] = useState(""); // Store the input name
+  const [projectDescription, setProjectDescription] = useState(""); // Store the input description
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -29,7 +30,10 @@ const Home = () => {
 
     const response = await fetch("/api/projects/add", {
       method: "POST",
-      body: JSON.stringify({ name: projectName }),
+      body: JSON.stringify({
+        name: projectName,
+        description: projectDescription, // Include the description in the request
+      }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -40,6 +44,7 @@ const Home = () => {
       setProjects([...projects, newProject]);
       setIsAdding(false); // Hide the input field after creation
       setProjectName(""); // Clear the input field
+      setProjectDescription(""); // Clear the description field
     } else {
       alert("Failed to add project");
       setIsAdding(false);
@@ -73,7 +78,13 @@ const Home = () => {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="Enter project name"
-              className="mb-4 px-4 py-2 border rounded-md text-black" // Set text color to black
+              className="mb-4 px-4 py-2 border rounded-md text-black"
+            />
+            <textarea
+              value={projectDescription}
+              onChange={(e) => setProjectDescription(e.target.value)}
+              placeholder="Enter project description"
+              className="mb-4 px-4 py-2 border rounded-md text-black"
             />
             <button
               onClick={handleCreateProject}
@@ -95,12 +106,13 @@ const Home = () => {
         {projects.map((project) => (
           <div
             key={project.id}
-            className="relative flex justify-center items-center bg-gray-300 text-black rounded-lg shadow-lg p-6 cursor-pointer group"
+            className="relative flex flex-col justify-center items-center bg-gray-300 text-black rounded-lg shadow-lg p-6 cursor-pointer group"
           >
             {/* Link to the project details page */}
             <Link href={`/projects/${project.id}`}>
-              <span>{project.name}</span>
+              <span className="font-bold">{project.name}</span>
             </Link>
+            <p className="text-sm mt-2">{project.description}</p>
 
             <button
               onClick={() => handleDeleteProject(project.id)}
