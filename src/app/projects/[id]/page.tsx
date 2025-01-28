@@ -12,6 +12,7 @@ const ProjectDetailsPage = () => {
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false); // Add edit mode state
 
   // State for product input form
   const [productName, setProductName] = useState("");
@@ -45,7 +46,34 @@ const ProjectDetailsPage = () => {
       }
     };
 
+    const fetchProductConfig = async () => {
+      try {
+        const response = await fetch(`/api/products?projectId=${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            const productData = data[0];
+            setIsEditMode(true); // Set edit mode
+            setProductName(productData.name);
+            setDescription(productData.description || "");
+            setFeatures(
+              productData.features.map((feature: any) => ({
+                featureName: feature.name,
+                options: feature.options.map((option: any) => ({
+                  name: option.name,
+                  images: option.images.map((image: any) => image.url),
+                })),
+              }))
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch product configurator data:", error);
+      }
+    };
+
     fetchProjectDetails();
+    fetchProductConfig();
   }, [id]);
 
   const handleAddFeature = () => {
@@ -253,7 +281,7 @@ const ProjectDetailsPage = () => {
             className="bg-green-500 text-white px-6 py-2 rounded-lg"
             onClick={handleSubmit}
           >
-            Save Product Details
+            {isEditMode ? "Save Changes" : "Save Product Details"}
           </button>
         </div>
       </div>

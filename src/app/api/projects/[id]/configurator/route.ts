@@ -41,6 +41,35 @@ export async function POST(
     );
   }
   try {
+    const existingProduct = await prisma.product.findFirst({
+      where: { projectId: Number(id) },
+    });
+    if (existingProduct) {
+      const product = await prisma.product.update({
+        where: { id: existingProduct.id },
+        data: {
+          name: productName,
+          description,
+          features: {
+            deleteMany: {},
+            create: features.map((feature) => ({
+              name: feature.featureName,
+              options: {
+                create: feature.options.map((option) => ({
+                  name: option.name,
+                  images: {
+                    create: option.images.map((img) => ({
+                      url: img,
+                    })),
+                  },
+                })),
+              },
+            })),
+          },
+        },
+      });
+      return NextResponse.json(product);
+    }
     const product = await prisma.product.create({
       data: {
         name: productName,

@@ -1,15 +1,16 @@
-// src\app\page.tsx
+// src/app/page.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Home = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isAdding, setIsAdding] = useState(false);
   const [projectName, setProjectName] = useState(""); // Store the input name
   const [projectDescription, setProjectDescription] = useState(""); // Store the input description
-
+  const router = useRouter();
   useEffect(() => {
     const fetchProjects = async () => {
       const response = await fetch("/api/projects");
@@ -63,7 +64,11 @@ const Home = () => {
     });
 
     if (response.ok) {
-      setProjects(projects.filter((project) => project.id !== projectId));
+      // Filter the project out of the state
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project.id !== projectId)
+      );
+      router.refresh();
     } else {
       alert("Failed to delete project");
     }
