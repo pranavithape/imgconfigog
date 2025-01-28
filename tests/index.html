@@ -5,14 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+  #container{
+    width: 100vw;
+    height: 100vh;
+  }
+</style>
 <body>
-    <iframe
+  <div id="container">
+<iframe
   src="http://localhost:3000/embed/configurator/30"
   width="100%"
-  height="600px"
-  frameborder="0"
-  allow="fullscreen"
+  height="100%"
+  style="border: none; width: 100%; height: 100%; min-height: 600px; display: block;"
   title="Product Configurator"
 ></iframe>
+  </div>
+
 </body>
 </html>
