@@ -15,9 +15,7 @@ const ProductConfigurator = ({ product }: ProductConfiguratorProps) => {
   const [selectedOptionImages, setSelectedOptionImages] = useState<string[]>(
     product.features[0]?.options[0]?.images.map((image: any) => image.url) || []
   );
-  const [selectedOptions, setSelectedOptions] = useState<
-    Record<string, string>
-  >(() => {
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initialOptions: Record<string, string> = {};
     product.features.forEach((feature: any) => {
       initialOptions[feature.name] = feature.options[0].name;
@@ -35,7 +33,7 @@ const ProductConfigurator = ({ product }: ProductConfiguratorProps) => {
 
     const feature = product?.features.find((f: any) => f.name === featureName);
     const option = feature?.options.find((o: any) => o.name === optionName);
-
+    
     if (option?.images) {
       setSelectedOptionImages(option.images.map((image: any) => image.url));
       setCurrentImageIndex(0);
@@ -55,7 +53,7 @@ const ProductConfigurator = ({ product }: ProductConfiguratorProps) => {
                 maxScale={4}
                 centerOnInit
               >
-                <TransformComponent
+                <TransformComponent 
                   wrapperClass="!w-full"
                   contentClass="!w-full"
                 >
@@ -64,15 +62,10 @@ const ProductConfigurator = ({ product }: ProductConfiguratorProps) => {
                     navigation
                     thumbs={{ swiper: thumbsSwiper }}
                     className="h-[300px] sm:h-[400px]"
-                    onSlideChange={(swiper) =>
-                      setCurrentImageIndex(swiper.activeIndex)
-                    }
+                    onSlideChange={(swiper) => setCurrentImageIndex(swiper.activeIndex)}
                   >
                     {selectedOptionImages.map((image, index) => (
-                      <SwiperSlide
-                        key={index}
-                        className="flex items-center justify-center"
-                      >
+                      <SwiperSlide key={index} className="flex items-center justify-center">
                         <img
                           src={image}
                           alt={`Product View ${index + 1}`}
@@ -137,8 +130,8 @@ const ProductConfigurator = ({ product }: ProductConfiguratorProps) => {
               </h3>
               <div className="space-y-1">
                 {feature.options.map((option: any) => (
-                  <label
-                    key={option.id}
+                  <label 
+                    key={option.id} 
                     className="flex items-center space-x-2 cursor-pointer group p-1 hover:bg-gray-50 rounded"
                   >
                     <input
@@ -146,9 +139,7 @@ const ProductConfigurator = ({ product }: ProductConfiguratorProps) => {
                       name={`feature-${feature.id}`}
                       value={option.name}
                       checked={selectedOptions[feature.name] === option.name}
-                      onChange={() =>
-                        handleOptionChange(feature.name, option.name)
-                      }
+                      onChange={() => handleOptionChange(feature.name, option.name)}
                       className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
                     <span className="text-sm text-gray-700 group-hover:text-gray-900">

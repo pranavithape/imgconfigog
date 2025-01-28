@@ -1,21 +1,26 @@
-// src/app/api/projects/[id]/configurator/route.ts
+import { type NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function POST(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = await params;
+type Context = {
+  params: {
+    id: string;
+  };
+};
+
+export async function POST(request: NextRequest, context: Context) {
+  const { id } = context.params;
+
   let requestData;
   try {
-    requestData = await req.json();
-  } catch (e) {
+    requestData = await request.json();
+  } catch (error) {
     return NextResponse.json(
       { error: "Invalid request body" },
       { status: 400 }
     );
   }
+
   const {
     productName,
     description,
@@ -40,10 +45,12 @@ export async function POST(
       { status: 400 }
     );
   }
+
   try {
     const existingProduct = await prisma.product.findFirst({
       where: { projectId: Number(id) },
     });
+
     if (existingProduct) {
       const product = await prisma.product.update({
         where: { id: existingProduct.id },
@@ -70,6 +77,7 @@ export async function POST(
       });
       return NextResponse.json(product);
     }
+
     const product = await prisma.product.create({
       data: {
         name: productName,
