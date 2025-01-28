@@ -2,12 +2,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 
 const ProjectDetailsPage = () => {
   const params = useParams();
   const { id } = params;
+  const router = useRouter();
 
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -174,6 +175,9 @@ const ProjectDetailsPage = () => {
       alert("Error submitting product details.");
     }
   };
+  const handleViewClick = () => {
+    router.push(`/projects/${id}/view`);
+  };
 
   if (loading) return <div>Loading...</div>;
   if (!project) return <div>Project not found</div>;
@@ -276,12 +280,18 @@ const ProjectDetailsPage = () => {
         </div>
 
         {/* Submit */}
-        <div className="mt-6">
+        <div className="mt-6 flex gap-2">
           <button
             className="bg-green-500 text-white px-6 py-2 rounded-lg"
             onClick={handleSubmit}
           >
             {isEditMode ? "Save Changes" : "Save Product Details"}
+          </button>
+          <button
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg"
+            onClick={handleViewClick}
+          >
+            View
           </button>
         </div>
       </div>
